@@ -1,3 +1,4 @@
+import os
 from hdfs import InsecureClient
 from collections import Counter
 import pyarrow.parquet as pq
@@ -14,3 +15,14 @@ with client.read('/alice-in-wonderland.txt', encoding='utf-8') as reader:
 
     
 # To-Do: Save the wordcount in a Parquet file and read it again!
+#df = pd.DataFrame(wordcount, columns = ['word','count'])
+
+#df.to_parquet("AliceCounter.parquet")
+
+
+df = pd.DataFrame(wordcount)  
+table = pa.Table.from_pandas(df)  
+pq.write_table(table, 'wordcount.parquet')  
+client.upload('/word-count.pq', 'word-count.pq')
+
+
